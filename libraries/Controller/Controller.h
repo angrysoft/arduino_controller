@@ -69,6 +69,7 @@ class Controller {
 		int getTemp(int num);
 		int getLight(int num);
 		void setRGB(int r, int g, int b);
+		void rgbReport(int r, int g, int b);
 		void setColor(String colors);
 		void setFadeColor(String colors);
 		int command(String s);

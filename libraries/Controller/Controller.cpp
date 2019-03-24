@@ -224,6 +224,7 @@ void Controller::setColor(String colors) {
 	this->green = g;
 	this->blue  = b;
 	this->setRGB(r,g,b);
+	this->rgbReport(r,g,b);
 }
 
 /*
@@ -274,7 +275,17 @@ void Controller::setFadeColor (String colors) {
 		
 	}
 	this->setRGB(r,g,b);
-	
+	this->rgbReport(r,g,b);
+}
+
+void Controller::rgbReport(int r, int g,int b) {
+    Serial.print("'cmd': 'report', 'model': 'rgbstrip', 'sid': '0x0000000000000001', 'data': {'red': ");
+	Serial.print(r);
+	Serial.print(", 'green': ");
+	Serial.print(g);
+	Serial.print(", 'blue': ");
+	Serial.print(b);
+	Serial.println("}");
 }
 
 
@@ -317,10 +328,11 @@ int Controller::command(String s) {
 		case 'T':
 	  		this->getTemp(code.toInt());
 	  		break;
-			
+		/*	
 		case 'L':
 			this->getLight(code.toInt());
 			break;
+	    */
 	}
       
   	return 0;
