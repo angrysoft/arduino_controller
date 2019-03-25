@@ -61,12 +61,14 @@ class Controller {
 		String offCode;
 		IRrecv irrecv(int outPin);
 		IRsend irsend;
+		int tick;
 		int red;
 		int green;
 		int blue;
 		int sendIR(String code);
 		int sendWireless(String code);
 		int getTemp(int num);
+		void tempReport();
 		int getLight(int num);
 		void setRGB(int r, int g, int b);
 		void rgbReport(int r, int g, int b);

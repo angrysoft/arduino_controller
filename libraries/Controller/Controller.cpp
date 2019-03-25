@@ -37,6 +37,7 @@ void Controller::setupCtrl() {
 	this->red = 0;
 	this->green = 0;
 	this->blue = 0;
+	this->tick = 0;
 	this->setRGB(0,0,0);
 	wSwitch.enableTransmit(WIRELESS_TRANSMITER_PIN);
 	wSwitch.enableReceive(WIRELESS_RECIVER_PIN);
@@ -166,6 +167,9 @@ int Controller::getTemp(int num) {
 	return 0;
 }
 
+void Controller::tempReport() {
+}
+ 
 
 /*
  * Get the light sensor state
@@ -343,7 +347,11 @@ void Controller::listen(bool echo) {
 	if (wSwitch.available()) {
 		this->getCode();
 	}
-*/	
+*/	tick++;
+    if (tick => 3600) {
+        this->tmpReport()
+        tick = 0;
+    }
 	while (Serial.available()) {
 		char inC = Serial.read();
 		
