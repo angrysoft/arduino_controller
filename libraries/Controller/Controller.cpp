@@ -167,7 +167,10 @@ int Controller::getTemp(int num) {
 	return 0;
 }
 
-void Controller::tempReport() {
+void Controller::tempReport(int temp, int id) {
+	Serial.print("'cmd': 'report', 'model': 'dallastemp', 'sid': 'dallasT1', 'data': {'temp': ");
+	Serial.print(temp);
+	Serial.println("}");
 }
  
 
@@ -349,7 +352,7 @@ void Controller::listen(bool echo) {
 	}
 */	tick++;
     if (tick => 3600) {
-        this->tmpReport()
+        this->tempReport()
         tick = 0;
     }
 	while (Serial.available()) {
