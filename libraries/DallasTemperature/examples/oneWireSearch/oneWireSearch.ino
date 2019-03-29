@@ -21,11 +21,8 @@ void setup()
   Serial.begin(115200);
   Serial.println("//\n// Start oneWireSearch.ino \n//");
 
-  for (uint8_t pin = 2; pin < 13; pin++)
-  {
-    findDevices(pin);
-  }
-  Serial.println("\n//\n// End oneWireSearch.ino \n//");
+    findDevices(7);
+
 }
 
 void loop()

@@ -68,6 +68,7 @@ class Controller {
 		int sendIR(String code);
 		int sendWireless(String code);
 		int getTemp(int num);
+		void reportAllTemp();
 		void tempReport(int temp, int id);
 		int getLight(int num);
 		void setRGB(int r, int g, int b);

@@ -167,6 +167,10 @@ int Controller::getTemp(int num) {
 	return 0;
 }
 
+void Controller::reportAllTemp() {
+    
+}
+
 void Controller::tempReport(int temp, int id) {
 	Serial.print("'cmd': 'report', 'model': 'dallastemp', 'sid': 'dallasT1', 'data': {'temp': ");
 	Serial.print(temp);
@@ -350,10 +354,10 @@ void Controller::listen(bool echo) {
 	if (wSwitch.available()) {
 		this->getCode();
 	}
-*/	tick++;
-    if (tick => 3600) {
-        this->tempReport()
-        tick = 0;
+*/	this->tick++;
+    if (tick >= 3600) {
+        this->reportAllTemp();
+        this->tick = 0;
     }
 	while (Serial.available()) {
 		char inC = Serial.read();
