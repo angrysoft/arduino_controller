@@ -37,10 +37,12 @@ void Controller::setupCtrl() {
 	this->red = 0;
 	this->green = 0;
 	this->blue = 0;
-	this->tick = 0;
+	this->startTime = 0;
 	this->setRGB(0,0,0);
+	this->rgbReport();
 	wSwitch.enableTransmit(WIRELESS_TRANSMITER_PIN);
 	wSwitch.enableReceive(WIRELESS_RECIVER_PIN);
+	sensors.begin();
 	sensors.requestTemperatures();
 }
 
@@ -156,25 +158,27 @@ int Controller::getCode() {
 /*
  * Get temperature from sensor
  */
-int Controller::getTemp(int num) {
-	//return T.thermometr_num.temp
+float Controller::getTemp(int num) {
 	sensors.requestTemperatures();
 	delay(50);
-	Serial.print("temp:");
-	Serial.print(num);
-	Serial.print('.');
-	Serial.println(sensors.getTempCByIndex(num));
-	return 0;
+	return sensors.getTempCByIndex(num);
 }
 
 void Controller::reportAllTemp() {
-    
+	int count = sensors.getDeviceCount();
+	sensors.requestTemperatures();
+	delay(50);
+	int i;
+	for (i = 0; i < count; i++) {
+		this->tempReport(sensors.getTempCByIndex(i), i);
+	}
 }
 
-void Controller::tempReport(int temp, int id) {
-	Serial.print("'cmd': 'report', 'model': 'dallastemp', 'sid': 'dallasT1', 'data': {'temp': ");
-	Serial.print(temp);
-	Serial.println("}");
+void Controller::tempReport(float temp, int id) {
+	String s_temp = String(temp);
+	String s_id = String(id);
+	String ret = String("{\"cmd\": \"report\", \"model\": \"dallastemp\", \"sid\": \"dallasDS" + s_id + "\", \"data\": {\"temp\": " + s_temp + "}}");
+	Serial.println(ret);
 }
  
 
@@ -235,7 +239,7 @@ void Controller::setColor(String colors) {
 	this->green = g;
 	this->blue  = b;
 	this->setRGB(r,g,b);
-	this->rgbReport(r,g,b);
+	this->rgbReport();
 }
 
 /*
@@ -286,17 +290,15 @@ void Controller::setFadeColor (String colors) {
 		
 	}
 	this->setRGB(r,g,b);
-	this->rgbReport(r,g,b);
+	this->rgbReport();
 }
 
-void Controller::rgbReport(int r, int g,int b) {
-    Serial.print("'cmd': 'report', 'model': 'rgbstrip', 'sid': '0x0000000000000001', 'data': {'red': ");
-	Serial.print(r);
-	Serial.print(", 'green': ");
-	Serial.print(g);
-	Serial.print(", 'blue': ");
-	Serial.print(b);
-	Serial.println("}");
+void Controller::rgbReport() {
+	String red = String(this->red);
+	String green = String(this->green);
+	String blue = String(this->blue);
+	String ret = String("{\"cmd\": \"report\", \"model\": \"rgbstrip\", \"sid\": \"0x0000000000000001\", \"data\": {\"red\": " + red + ", \"green\": " + green + ", \"blue\": " + blue + "}}");
+	Serial.println(ret);
 }
 
 
@@ -354,11 +356,13 @@ void Controller::listen(bool echo) {
 	if (wSwitch.available()) {
 		this->getCode();
 	}
-*/	this->tick++;
-    if (tick >= 3600) {
-        this->reportAllTemp();
-        this->tick = 0;
+*/
+	unsigned long currentTime = millis();
+	if (currentTime - this->startTime > 60000) {
+		this->reportAllTemp();
+		this->startTime = currentTime;
     }
+
 	while (Serial.available()) {
 		char inC = Serial.read();
 		
