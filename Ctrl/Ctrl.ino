@@ -1,4 +1,4 @@
-// Copyright 2014 Sebastian Zwierzchowski <sebastian.zwierzchowski<at>gmail<dot>com>
+// Copyright 2014-2019 Sebastian Zwierzchowski <sebastian.zwierzchowski<at>gmail<dot>com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@
 Controller ctrl;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   ctrl.setupCtrl();
     
 }
