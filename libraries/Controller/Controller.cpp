@@ -290,7 +290,7 @@ void Controller::setFadeColor (String colors) {
 }
 
 void Controller::rgbReport(int r, int g,int b) {
-    Serial.print("'cmd': 'report', 'model': 'rgbstrip', 'sid': '0x0000000000000001', 'data': {'red': ");
+    Serial.print("'cmd': 'report', 'model': 'rgbstrip', 'sid': 'rgb01', 'data': {'red': ");
 	Serial.print(r);
 	Serial.print(", 'green': ");
 	Serial.print(g);
