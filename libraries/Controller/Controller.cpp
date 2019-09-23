@@ -37,6 +37,7 @@ void Controller::setupCtrl() {
 	this->red = 0;
 	this->green = 0;
 	this->blue = 0;
+	this->bright = 0;
 	this->startTime = 0;
 	this->setRGB(0,0,0);
 	this->rgbReport();
@@ -200,6 +201,11 @@ int Controller::getLight(int num) {
 }
 
 
+void Controller::echo(String s) {
+	Serial.println(s);
+}
+
+
 /*
  * Set color on rgb stirp used by oteher method.Do not set color var
  */
@@ -213,10 +219,11 @@ void Controller::setRGB(int r, int g, int b) {
 /*
  * Set color on rgb strip
  */
-void Controller::setColor(String colors) {
+void Controller::setFadeColor(String colors) {
 	int r = 0;
 	int g = 0;
 	int b = 0;
+	int d = 100;
 	
 	int idx = colors.indexOf('.');
 	int idxOld = idx+1;
@@ -229,59 +236,45 @@ void Controller::setColor(String colors) {
 	//Green
 	idx = colors.indexOf('.',idxOld);
 	tmp = colors.substring(idxOld,idx);
+	idxOld = idx+1;
 	g = tmp.toInt();
 	
 	//Blue
-	tmp = colors.substring(idx+1);
+	idx = colors.indexOf('.', idxOld);
+	tmp = colors.substring(idxOld, idx);
 	b = tmp.toInt();
-	
+
+	//bright
+	tmp = colors.substring(idx+1);
+	d = tmp.toInt();
+
+	int current_r = this->red * this->bright / 100;
+	int current_g = this->green * this->bright / 100;
+	int current_b = this->blue * this->bright / 100;
 	this->red   = r;
 	this->green = g;
 	this->blue  = b;
-	this->setRGB(r,g,b);
-	this->rgbReport();
-}
+	this->bright = d;
 
-/*
- * Set color on rgb strip with fade
- */
-
-void Controller::setFadeColor (String colors) {
-	int r = 0;
-	int g = 0;
-	int b = 0;
-	int idx = colors.indexOf('.');
-	int idxOld = idx+1;
-	String tmp;
+	int target_r = r * d / 100;
+	int target_g = g * d / 100;
+	int target_b = b * d / 100;
 	
-	//Red
-	tmp = colors.substring(0, idx);
-	r = tmp.toInt();
-	
-	//Green
-	idx = colors.indexOf('.',idxOld);
-	tmp = colors.substring(idxOld,idx);
-	g = tmp.toInt();
-	
-	//Blue
-	tmp = colors.substring(idx+1);
-	b = tmp.toInt();
-
 	int change = 0;
-	
-	while (r != this->red or g != this->green or b != this->blue) {
-		if (r != this->red) {
-			if (r < this->red) {this->red--;} else {this->red++;}
+
+	while (target_r != current_r or target_g != current_g or target_b != current_b) {
+		if (current_r != target_r) {
+			if (target_r < current_r) {current_r--;} else {current_r++;}
 		}
-		if (g != this->green) {
-			if (g < this->green) {this->green--;} else {this->green++;}
+		if (current_g != target_g) {
+			if (target_g < current_g) {current_g--;} else {current_g++;}
 		}
-		if (b != this->blue) {
-			if (b < this->blue) {this->blue--;} else {this->blue++;}
+		if (current_b != target_b) {
+			if (target_b < current_b) {current_b--;} else {current_b++;}
 		}
 
 		if (change == 4) {
-			this->setRGB(this->red,this->green,this->blue);
+			this->setRGB(current_r,current_g,current_b);
 			change = 0;
 		} else {
 			change++;
@@ -289,7 +282,8 @@ void Controller::setFadeColor (String colors) {
 
 		
 	}
-	this->setRGB(r,g,b);
+	
+	this->setRGB(target_r,target_g,target_b);
 	this->rgbReport();
 }
 
@@ -297,7 +291,8 @@ void Controller::rgbReport() {
 	String red = String(this->red);
 	String green = String(this->green);
 	String blue = String(this->blue);
-	String ret = String("{\"cmd\": \"report\", \"model\": \"rgbstrip\", \"sid\": \"rgb01\", \"data\": {\"red\": " + red + ", \"green\": " + green + ", \"blue\": " + blue + "}}");
+	String bright = String(this->bright);
+	String ret = String("{\"cmd\": \"report\", \"model\": \"rgbstrip\", \"sid\": \"rgb01\", \"data\": {\"red\": " + red + ", \"green\": " + green + ", \"blue\": " + blue + ",\"bright\":" + bright + "}}");
 	Serial.println(ret);
 }
 
@@ -331,7 +326,7 @@ int Controller::command(String s) {
 	  		break;
 	  	
 		case 'C':
-			this->setColor(code);
+			this->echo(code);
       		break;
 			
 		case 'F':
