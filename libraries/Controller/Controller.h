@@ -66,6 +66,7 @@ class Controller {
 		int green;
 		int blue;
 		int bright;
+		bool status;
 		int sendIR(String code);
 		int sendWireless(String code);
 		float getTemp(int num);
@@ -75,7 +76,7 @@ class Controller {
 		void setRGB(int r, int g, int b);
 		void rgbReport();
 		void echo(String s);
-		void setFadeColor(String colors);
+		void setColor(int rgb);
 		int command(String s);
 		int getCode();
 };

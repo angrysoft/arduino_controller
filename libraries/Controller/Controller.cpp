@@ -34,9 +34,10 @@ Controller::Controller() {
 }
 
 void Controller::setupCtrl() {
-	this->red = 0;
-	this->green = 0;
-	this->blue = 0;
+	this->red = 255;
+	this->green = 255;
+	this->blue = 255;
+	this->status = false;
 	this->bright = 0;
 	this->startTime = 0;
 	this->setRGB(0,0,0);
@@ -219,34 +220,10 @@ void Controller::setRGB(int r, int g, int b) {
 /*
  * Set color on rgb strip
  */
-void Controller::setFadeColor(String colors) {
-	int r = 0;
-	int g = 0;
-	int b = 0;
-	int d = 100;
-	
-	int idx = colors.indexOf('.');
-	int idxOld = idx+1;
-	
-	String tmp;
-	//Red
-	tmp = colors.substring(0, idx);
-	r = tmp.toInt();
-	
-	//Green
-	idx = colors.indexOf('.',idxOld);
-	tmp = colors.substring(idxOld,idx);
-	idxOld = idx+1;
-	g = tmp.toInt();
-	
-	//Blue
-	idx = colors.indexOf('.', idxOld);
-	tmp = colors.substring(idxOld, idx);
-	b = tmp.toInt();
-
-	//bright
-	tmp = colors.substring(idx+1);
-	d = tmp.toInt();
+void Controller::setColor(inr rgb) {
+	int r = rgb >> 16 & 255;
+    int g = rgb >> 8 & 255;
+    int b = rgb & 255;
 
 	int current_r = this->red * this->bright / 100;
 	int current_g = this->green * this->bright / 100;
@@ -325,12 +302,12 @@ int Controller::command(String s) {
 	  		this->sendWireless(code);
 	  		break;
 	  	
-		case 'C':
-			this->echo(code);
+		case 'D':
+			this->setBright(code.toInt());
       		break;
 			
-		case 'F':
-			this->setFadeColor(code);
+		case 'C':
+			this->setColor(code,toInt());
 			break;
 			
 		case 'T':
