@@ -15,8 +15,7 @@
 #ifndef Controller_h
 #define Controller_h
 //Led strip Driver Pins
-#define CLK 9//pins definitions for the driver        
-#define DIO 10
+
 //Light sensor
 #define LIGHTPIN A0
 
@@ -41,10 +40,10 @@
 
 #include <IRremote.h>
 #include <Arduino.h>
-#include <RGBdriver.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <RCSwitch.h>
+#include "RgbStrip.h"
 
 
 //#include <Wiring.h>
@@ -57,26 +56,19 @@ class Controller {
 		
 		void listen(bool echo);
 	private:
+		RgbStrip led;
 		String inS;
 		String offCode;
 		IRrecv irrecv(int outPin);
 		IRsend irsend;
 		unsigned long startTime;
-		int red;
-		int green;
-		int blue;
-		int bright;
-		bool status;
 		int sendIR(String code);
 		int sendWireless(String code);
 		float getTemp(int num);
 		void reportAllTemp();
 		void tempReport(float temp, int id);
 		int getLight(int num);
-		void setRGB(int r, int g, int b);
-		void rgbReport();
 		void echo(String s);
-		void setColor(int rgb);
 		int command(String s);
 		int getCode();
 };
