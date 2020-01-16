@@ -12,7 +12,7 @@ class RgbStrip {
 		int green;
 		int blue;
 		int bright;
-		bool power;
+		int power;
         int dupa();
         void fade(int t_red, int t_green, int t_blue);
 		void setRGB(int r, int g, int b);

@@ -34,7 +34,7 @@ void RgbStrip::set_bright(int bright) {
   this->bright = bright;
 }
 
-void RgbStrip::set_power(bool power) {
+void RgbStrip::set_power(int power) {
   if (power and not this->power) {
     this->power = 1;
     int bright = this->bright;
