@@ -27,7 +27,7 @@ class RgbStrip {
 		RgbStrip();
 		void set_rgb(long int rgb);
 		void set_bright(int bright);
-		void set_power(bool power);
+		void set_power(int power);
 		void report();
 };
 #endif

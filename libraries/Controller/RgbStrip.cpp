@@ -3,14 +3,14 @@ RGBdriver Driver(CLK,DIO);
 
 RgbStrip::RgbStrip() {
 	this->red = 255;
-	this->green = 255;
-	this->blue = 255;
+	this->green = 199;
+	this->blue = 143;
 	this->power = false;
 	this->bright = 100;
 }
 
 void RgbStrip::set_rgb(long int rgb) {
-  this->power = true;
+  this->power = 1;
   int t_red = rgb >> 16 & 255;
   int t_green = rgb >> 8 & 255;
   int t_blue = rgb & 255;
@@ -26,7 +26,7 @@ void RgbStrip::set_rgb(long int rgb) {
 
 void RgbStrip::set_bright(int bright) {
   if (bright < 1 or bright > 100) {return;}
-  this->power = true;
+  this->power = 1;
   int t_red = this->red * bright / 100;
   int t_green = this->green * bright / 100;
   int t_blue = this->blue * bright / 100;
@@ -36,12 +36,12 @@ void RgbStrip::set_bright(int bright) {
 
 void RgbStrip::set_power(bool power) {
   if (power and not this->power) {
-    this->power = true;
+    this->power = 1;
     int bright = this->bright;
     this->bright = 0;
     this->set_bright(bright);
   } else if (not power and this->power) {
-    this->power = false;
+    this->power = 0;
     this->fade(0, 0, 0);
   }
 }
@@ -51,9 +51,6 @@ void RgbStrip::setRGB(int r, int g, int b) {
 	Driver.begin();
 	Driver.SetColor(r, g, b);
 	Driver.end();
-    // cout << r << '.';
-    // cout << g << '.';
-    // cout << b << endl;
 }
 
 void RgbStrip::fade(int t_red, int t_green, int t_blue) {
@@ -64,8 +61,6 @@ void RgbStrip::fade(int t_red, int t_green, int t_blue) {
     int step_r = this->calcStep(r, t_red);
     int step_g = this->calcStep(g, t_green);
     int step_b = this->calcStep(b, t_blue);
-    this->setRGB(step_r, step_g, step_b);
-    // this_thread::sleep_for(1s);
     
     int loop = 0;
 
@@ -75,8 +70,7 @@ void RgbStrip::fade(int t_red, int t_green, int t_blue) {
         b = this->calcVal(b, t_blue, step_b, loop);
         this->setRGB(r,g,b);
         loop++;
-        delayMicroseconds(1300);
-        // this_thread::sleep_for(1.3ms);    
+        delayMicroseconds(1300);  
     }
 }
 

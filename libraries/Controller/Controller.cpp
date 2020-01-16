@@ -56,7 +56,7 @@ int Controller::sendWireless(String code) {
 	int p = 1;
 	//bit length
 	int bit = 24;
-	//get valu form code
+	//get value form code
 	int idx = code.indexOf('.');
 	tmp = code.substring(0,idx);
 	sendCode = tmp.toInt();
