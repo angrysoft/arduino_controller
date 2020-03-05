@@ -14,9 +14,6 @@
 
 #include "Controller.h"
 
-
-
-
 // RGBdriver Driver(CLK,DIO);
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
@@ -37,6 +34,7 @@ Controller::Controller() {
 void Controller::setupCtrl() {
 	this->startTime = 0;
 	this->led.report();
+	
 	wSwitch.enableTransmit(WIRELESS_TRANSMITER_PIN);
 	wSwitch.enableReceive(WIRELESS_RECIVER_PIN);
 	sensors.begin();
@@ -145,14 +143,17 @@ int Controller::command(String s) {
 	  	
 		case 'B':
 			this->led.set_bright(code.toInt());
+			this->led.report();
       		break;
 			
 		case 'C':
 			this->led.set_rgb(code.toInt());
+			this->led.report();
 			break;
 			
 		case 'P':
 			this->led.set_power(code.toInt());
+			this->led.report();
 			break;
 			
 		case 'T':

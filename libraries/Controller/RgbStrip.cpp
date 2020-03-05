@@ -65,19 +65,24 @@ void RgbStrip::fade(int t_red, int t_green, int t_blue) {
     int loop = 0;
 
     while (r != t_red or g != t_green or b != t_blue) {
+      int c_r = r;
+      int c_b = b;
+      int c_g = g;
         r = this->calcVal(r, t_red, step_r, loop);
         g = this->calcVal(g, t_green, step_g, loop);
         b = this->calcVal(b, t_blue, step_b, loop);
-        this->setRGB(r,g,b);
+        if (c_r != r || c_b != b || c_g != g) {
+          this->setRGB(r,g,b);
+        }
         loop++;
-        delayMicroseconds(1300);  
+        // delayMicroseconds(300);  
     }
 }
 
 int RgbStrip::calcStep(int start, int end) {
   int step = end - start; // What's the overall gap?
   if (step) {                      // If its non-zero, 
-    step = 765 / step;              //   divide by 1020
+    step = 255 / step;              //   divide by 1020 / 765
   } 
   return step;
 }
