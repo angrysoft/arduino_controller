@@ -280,5 +280,13 @@ class RgbStrip(ArduinoDevice):
     
     class DallasTemp(ArduinoDevice):
         def __init__(self, sid, controller):
-            super().__init__(sid, controller)
-            self.model    
+            super().__init__(sid)
+            self._data['model'] = 'dallastemp'
+        
+        @property
+        def model(self):
+            return self._data.get('model')
+        
+        @property
+        def temp(self):
+            return self._data.get('temp')
